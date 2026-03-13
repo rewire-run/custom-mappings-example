@@ -1,0 +1,32 @@
+[workspace]
+name = "rewire-custom-mappings-example"
+version = "0.1.0"
+description = "Custom message publishers for testing rewire dynamic mappings"
+channels = ["conda-forge", "https://prefix.dev/rewire"]
+platforms = ["osx-arm64", "linux-64"]
+
+[dependencies]
+colcon-common-extensions = ">=0.3.0,<0.4"
+cmake = ">=4"
+ninja = "*"
+rewire = "*"
+
+[feature.humble]
+channels = ["robostack-humble"]
+
+[feature.humble.dependencies]
+ros-humble-rclcpp = "*"
+ros-humble-std-msgs = ">=4.2"
+ros-humble-geometry-msgs = ">=4.2"
+ros-humble-rosidl-default-generators = "*"
+
+[environments]
+default = ["humble"]
+
+[tasks]
+build = "sh -c 'colcon build --symlink-install --event-handlers console_direct+ --cmake-args -G Ninja -DCMAKE_BUILD_TYPE=Debug -DPython3_EXECUTABLE=$(which python) -DPython_EXECUTABLE=$(which python)'"
+launch = { cmd = "bash -c 'source install/setup.sh && ros2 run custom_mapping publisher'", depends-on = ["build"] }
+clean = "rm -rf build/ install/ log/"
+
+[activation]
+scripts = ["install/setup.sh"]

@@ -1,0 +1,155 @@
+[
+  // MotorStatus: leaf scalars + text log
+  {
+    type: "custom_mapping/MotorStatus",
+    entity: "motor",
+    fields: {
+      temperature: { archetype: "Scalars" },
+      rpm: { archetype: "Scalars" },
+      status_text: { archetype: "TextLog" },
+    }
+  },
+
+  // Detections: collection each → Points3D with labels
+  {
+    type: "custom_mapping/Detections",
+    fields: {
+      detections: {
+        archetype: "Points3D",
+        each: ".",
+        x: "position.x",
+        y: "position.y",
+        z: "position.z",
+        label: "label",
+      },
+      count: { archetype: "Scalars" },
+    }
+  },
+
+  // RigidBodies: expansion each + entity_key + composite inside
+  {
+    type: "custom_mapping/RigidBodies",
+    fields: {
+      frame_number: { archetype: "Scalars" },
+      rigidbodies: {
+        each: ".",
+        entity_key: "rigid_body_name",
+        fields: {
+          pose: {
+            archetype: "InstancePoses3D",
+            translation_x: "position.x",
+            translation_y: "position.y",
+            translation_z: "position.z",
+            quat_x: "orientation.x",
+            quat_y: "orientation.y",
+            quat_z: "orientation.z",
+            quat_w: "orientation.w",
+          },
+          markers: {
+            archetype: "Points3D",
+            each: ".",
+            x: "x",
+            y: "y",
+            z: "z",
+          },
+        }
+      }
+    }
+  },
+
+  // GpsReading: GeoPoints with nested struct
+  {
+    type: "custom_mapping/GpsReading",
+    entity: "gps",
+    fields: {
+      fix: {
+        archetype: "GeoPoints",
+        lat: "latitude",
+        lon: "longitude",
+        alt: "altitude",
+      },
+    }
+  },
+
+  // ForceVector: single Arrows3D + magnitude scalar
+  {
+    type: "custom_mapping/ForceVector",
+    entity: "force",
+    fields: {
+      arrow: {
+        archetype: "Arrows3D",
+        origin_x: "origin.x",
+        origin_y: "origin.y",
+        origin_z: "origin.z",
+        vector_x: "direction.x",
+        vector_y: "direction.y",
+        vector_z: "direction.z",
+      },
+      magnitude: { archetype: "Scalars" },
+    }
+  },
+
+  // Detections2D: collection each → Points2D with labels
+  {
+    type: "custom_mapping/Detections2D",
+    fields: {
+      detections: {
+        archetype: "Points2D",
+        each: ".",
+        x: "position.x",
+        y: "position.y",
+        label: "label",
+      },
+      count: { archetype: "Scalars" },
+    }
+  },
+
+  // BoundingBoxes2D: collection each → Boxes2D with labels
+  {
+    type: "custom_mapping/BoundingBoxes2D",
+    fields: {
+      boxes: {
+        archetype: "Boxes2D",
+        each: ".",
+        center_x: "center_x",
+        center_y: "center_y",
+        half_width: "half_width",
+        half_height: "half_height",
+        label: "label",
+      },
+    }
+  },
+
+  // BoundingBoxes3D: collection each → Boxes3D with labels
+  {
+    type: "custom_mapping/BoundingBoxes3D",
+    fields: {
+      boxes: {
+        archetype: "Boxes3D",
+        each: ".",
+        center_x: "center_x",
+        center_y: "center_y",
+        center_z: "center_z",
+        half_width: "half_width",
+        half_height: "half_height",
+        half_depth: "half_depth",
+        label: "label",
+      },
+    }
+  },
+
+  // Trajectory: LineStrips3D from waypoint array
+  {
+    type: "custom_mapping/Trajectory",
+    entity: "trajectory",
+    fields: {
+      waypoints: {
+        archetype: "LineStrips3D",
+        each: ".",
+        x: "x",
+        y: "y",
+        z: "z",
+      },
+    }
+  },
+]
