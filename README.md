@@ -2,9 +2,9 @@
 
 [![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json)](https://pixi.sh)
 
-Custom message publishers for testing [rewire](https://github.com/rewire-run/rewire) dynamic mappings.
+Custom message publishers for testing [Rewire](https://github.com/rewire-run/rewire) dynamic mappings.
 
-Demonstrates how rewire can visualize arbitrary ROS 2 message types through JSON5 mapping configuration,
+Demonstrates how Rewire can visualize arbitrary ROS 2 message types through JSON5 mapping configuration,
 without requiring built-in converter support.
 
 ## Message Types
@@ -29,20 +29,31 @@ Requires [pixi](https://pixi.sh).
 pixi install
 ```
 
+This project uses [pixi-build-ros](https://github.com/nicross/pixi-build-ros) to build the custom_mappings ROS package as a conda dependency. The `ros-humble-custom-mappings` (or `ros-jazzy-custom-mappings`) package is built from source and installed into the pixi environment automatically.
+
+## Environments
+
+| Environment | ROS Distro |
+|---|---|
+| `default` / `jazzy` | Jazzy |
+| `Humble` | Humble |
+
 ## Usage
 
 ```bash
-pixi run launch
+pixi run ros2 run custom_mappings publisher
 ```
 
-In a separate terminal, run rewire with the mapping configuration:
+In a separate terminal, run `rewire` with the mapping configuration:
 
 ```bash
 pixi run rewire record --all --config mappings.json5
 ```
 
-## Project Structure
+## Development
 
-- **mappings.json5** — rewire dynamic mapping rules
-- **custom_mappings/msg/** — ROS 2 message definitions (`.msg` files)
-- **custom_mappings/src/publisher.cpp** — C++ publisher node
+After modifying the C++ package in `custom_mappings/`, reinstall the local package:
+
+```bash
+pixi reinstall ros-humble-custom-mappings
+```
