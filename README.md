@@ -1,5 +1,7 @@
 # rewire-custom-mappings-example
 
+[![Pixi Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json)](https://pixi.sh)
+
 Custom message publishers for testing [rewire](https://github.com/rewire-run/rewire) dynamic mappings.
 
 Demonstrates how rewire can visualize arbitrary ROS 2 message types through JSON5 mapping configuration,
@@ -42,5 +44,5 @@ pixi run rewire record --all --config mappings.json5
 ## Project Structure
 
 - **mappings.json5** — rewire dynamic mapping rules
-- **custom_mapping/msg/** — ROS 2 message definitions (`.msg` files)
-- **custom_mapping/src/publisher.cpp** — C++ publisher node
+- **custom_mappings/msg/** — ROS 2 message definitions (`.msg` files)
+- **custom_mappings/src/publisher.cpp** — C++ publisher node

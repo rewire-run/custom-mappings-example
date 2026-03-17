@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.14)
-project(custom_mapping)
+project(custom_mappings)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+if(APPLE)
+  link_libraries("-undefined dynamic_lookup")
+  add_library(atomic INTERFACE)
+endif()
+
+find_package(Python3 REQUIRED COMPONENTS Development)
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -34,7 +40,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 add_executable(publisher src/publisher.cpp)
 ament_target_dependencies(publisher rclcpp std_msgs geometry_msgs)
 rosidl_get_typesupport_target(typesupport_target ${PROJECT_NAME} rosidl_typesupport_cpp)
-target_link_libraries(publisher "${typesupport_target}")
+target_link_libraries(publisher "${typesupport_target}" Python3::Python)
 
 install(TARGETS publisher DESTINATION lib/${PROJECT_NAME})
 

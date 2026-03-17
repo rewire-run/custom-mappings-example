@@ -1,3 +1,3 @@
 std_msgs/Header header
-custom_mapping/Arrow arrow
+custom_mappings/Arrow arrow
 float64 magnitude

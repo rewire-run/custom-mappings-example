@@ -1,7 +1,7 @@
 [
   // MotorStatus: leaf scalars + text log
   {
-    type: "custom_mapping/MotorStatus",
+    type: "custom_mappings/MotorStatus",
     entity: "motor",
     fields: {
       temperature: { archetype: "Scalars" },
@@ -12,7 +12,7 @@
 
   // Detections: collection each → Points3D with labels
   {
-    type: "custom_mapping/Detections",
+    type: "custom_mappings/Detections",
     fields: {
       detections: {
         archetype: "Points3D",
@@ -28,7 +28,7 @@
 
   // RigidBodies: expansion each + entity_key + composite inside
   {
-    type: "custom_mapping/RigidBodies",
+    type: "custom_mappings/RigidBodies",
     fields: {
       frame_number: { archetype: "Scalars" },
       rigidbodies: {
@@ -59,7 +59,7 @@
 
   // GpsReading: GeoPoints with nested struct
   {
-    type: "custom_mapping/GpsReading",
+    type: "custom_mappings/GpsReading",
     entity: "gps",
     fields: {
       fix: {
@@ -73,7 +73,7 @@
 
   // ForceVector: single Arrows3D + magnitude scalar
   {
-    type: "custom_mapping/ForceVector",
+    type: "custom_mappings/ForceVector",
     entity: "force",
     fields: {
       arrow: {
@@ -91,7 +91,7 @@
 
   // Detections2D: collection each → Points2D with labels
   {
-    type: "custom_mapping/Detections2D",
+    type: "custom_mappings/Detections2D",
     fields: {
       detections: {
         archetype: "Points2D",
@@ -106,7 +106,7 @@
 
   // BoundingBoxes2D: collection each → Boxes2D with labels
   {
-    type: "custom_mapping/BoundingBoxes2D",
+    type: "custom_mappings/BoundingBoxes2D",
     fields: {
       boxes: {
         archetype: "Boxes2D",
@@ -122,7 +122,7 @@
 
   // BoundingBoxes3D: collection each → Boxes3D with labels
   {
-    type: "custom_mapping/BoundingBoxes3D",
+    type: "custom_mappings/BoundingBoxes3D",
     fields: {
       boxes: {
         archetype: "Boxes3D",
@@ -140,7 +140,7 @@
 
   // Trajectory: LineStrips3D from waypoint array
   {
-    type: "custom_mapping/Trajectory",
+    type: "custom_mappings/Trajectory",
     entity: "trajectory",
     fields: {
       waypoints: {

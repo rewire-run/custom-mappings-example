@@ -2,30 +2,30 @@
 #include <chrono>
 
 #include <rclcpp/rclcpp.hpp>
-#include <custom_mapping/msg/motor_status.hpp>
-#include <custom_mapping/msg/detections.hpp>
-#include <custom_mapping/msg/detections2_d.hpp>
-#include <custom_mapping/msg/bounding_boxes2_d.hpp>
-#include <custom_mapping/msg/bounding_boxes3_d.hpp>
-#include <custom_mapping/msg/trajectory.hpp>
-#include <custom_mapping/msg/force_vector.hpp>
-#include <custom_mapping/msg/gps_reading.hpp>
-#include <custom_mapping/msg/rigid_bodies.hpp>
+#include <custom_mappings/msg/motor_status.hpp>
+#include <custom_mappings/msg/detections.hpp>
+#include <custom_mappings/msg/detections2_d.hpp>
+#include <custom_mappings/msg/bounding_boxes2_d.hpp>
+#include <custom_mappings/msg/bounding_boxes3_d.hpp>
+#include <custom_mappings/msg/trajectory.hpp>
+#include <custom_mappings/msg/force_vector.hpp>
+#include <custom_mappings/msg/gps_reading.hpp>
+#include <custom_mappings/msg/rigid_bodies.hpp>
 
 using namespace std::chrono_literals;
 
 class CustomPublisher : public rclcpp::Node {
 public:
   CustomPublisher() : Node("custom_publisher"), tick_(0) {
-    motor_pub_ = create_publisher<custom_mapping::msg::MotorStatus>("/motor/status", 10);
-    det_pub_ = create_publisher<custom_mapping::msg::Detections>("/detections", 10);
-    det2d_pub_ = create_publisher<custom_mapping::msg::Detections2D>("/detections_2d", 10);
-    bbox2d_pub_ = create_publisher<custom_mapping::msg::BoundingBoxes2D>("/bounding_boxes_2d", 10);
-    bbox3d_pub_ = create_publisher<custom_mapping::msg::BoundingBoxes3D>("/bounding_boxes_3d", 10);
-    traj_pub_ = create_publisher<custom_mapping::msg::Trajectory>("/trajectory", 10);
-    rb_pub_ = create_publisher<custom_mapping::msg::RigidBodies>("/rigidbodies", 10);
-    gps_pub_ = create_publisher<custom_mapping::msg::GpsReading>("/gps", 10);
-    force_pub_ = create_publisher<custom_mapping::msg::ForceVector>("/force", 10);
+    motor_pub_ = create_publisher<custom_mappings::msg::MotorStatus>("/motor/status", 10);
+    det_pub_ = create_publisher<custom_mappings::msg::Detections>("/detections", 10);
+    det2d_pub_ = create_publisher<custom_mappings::msg::Detections2D>("/detections_2d", 10);
+    bbox2d_pub_ = create_publisher<custom_mappings::msg::BoundingBoxes2D>("/bounding_boxes_2d", 10);
+    bbox3d_pub_ = create_publisher<custom_mappings::msg::BoundingBoxes3D>("/bounding_boxes_3d", 10);
+    traj_pub_ = create_publisher<custom_mappings::msg::Trajectory>("/trajectory", 10);
+    rb_pub_ = create_publisher<custom_mappings::msg::RigidBodies>("/rigidbodies", 10);
+    gps_pub_ = create_publisher<custom_mappings::msg::GpsReading>("/gps", 10);
+    force_pub_ = create_publisher<custom_mappings::msg::ForceVector>("/force", 10);
     timer_ = create_wall_timer(100ms, [this] { publish(); });
   }
 
@@ -36,7 +36,7 @@ private:
     auto stamp = now();
 
     // MotorStatus: leaf scalars + text log
-    auto motor = custom_mapping::msg::MotorStatus();
+    auto motor = custom_mappings::msg::MotorStatus();
     motor.header.stamp = stamp;
     motor.header.frame_id = "base_link";
     motor.temperature = 40.0 + 5.0 * std::sin(t);
@@ -45,18 +45,18 @@ private:
     motor_pub_->publish(motor);
 
     // Detections: collection each with Points3D + labels
-    auto det_msg = custom_mapping::msg::Detections();
+    auto det_msg = custom_mappings::msg::Detections();
     det_msg.header.stamp = stamp;
     det_msg.header.frame_id = "camera_link";
 
-    custom_mapping::msg::Detection d1;
+    custom_mappings::msg::Detection d1;
     d1.position.x = 1.0 + 0.5 * std::sin(t);
     d1.position.y = 2.0;
     d1.position.z = 0.0;
     d1.label = "person";
     d1.confidence = 0.95;
 
-    custom_mapping::msg::Detection d2;
+    custom_mappings::msg::Detection d2;
     d2.position.x = 4.0;
     d2.position.y = 5.0 + std::cos(t);
     d2.position.z = 1.0;
@@ -68,12 +68,12 @@ private:
     det_pub_->publish(det_msg);
 
     // RigidBodies: expansion each + entity_key + composite inside
-    auto rb_msg = custom_mapping::msg::RigidBodies();
+    auto rb_msg = custom_mappings::msg::RigidBodies();
     rb_msg.header.stamp = stamp;
     rb_msg.header.frame_id = "mocap";
     rb_msg.frame_number = tick_;
 
-    custom_mapping::msg::RigidBody body1;
+    custom_mappings::msg::RigidBody body1;
     body1.rigid_body_name = "drone";
     body1.pose.position.x = 2.0 * std::cos(t * 0.3);
     body1.pose.position.y = 2.0 * std::sin(t * 0.3);
@@ -93,7 +93,7 @@ private:
     m3.z = body1.pose.position.z;
     body1.markers = {m1, m2, m3};
 
-    custom_mapping::msg::RigidBody body2;
+    custom_mappings::msg::RigidBody body2;
     body2.rigid_body_name = "target";
     body2.pose.position.x = 0.0;
     body2.pose.position.y = 3.0;
@@ -110,7 +110,7 @@ private:
     rb_pub_->publish(rb_msg);
 
     // GpsReading: GeoPoints with nested fix struct
-    auto gps = custom_mapping::msg::GpsReading();
+    auto gps = custom_mappings::msg::GpsReading();
     gps.header.stamp = stamp;
     gps.header.frame_id = "gps_link";
     gps.fix.latitude = 37.7749 + 0.0001 * std::sin(t * 0.2);
@@ -119,7 +119,7 @@ private:
     gps_pub_->publish(gps);
 
     // ForceVector: single Arrows3D + magnitude scalar
-    auto force = custom_mapping::msg::ForceVector();
+    auto force = custom_mappings::msg::ForceVector();
     force.header.stamp = stamp;
     force.header.frame_id = "base_link";
     force.arrow.origin.x = 0.0;
@@ -135,23 +135,23 @@ private:
     force_pub_->publish(force);
 
     // Detections2D: collection each → Points2D with labels
-    auto det2d = custom_mapping::msg::Detections2D();
+    auto det2d = custom_mappings::msg::Detections2D();
     det2d.header.stamp = stamp;
     det2d.header.frame_id = "camera_link";
 
-    custom_mapping::msg::Detection2D p1;
+    custom_mappings::msg::Detection2D p1;
     p1.position.x = 320.0 + 50.0 * std::sin(t);
     p1.position.y = 240.0 + 30.0 * std::cos(t);
     p1.label = "pedestrian";
     p1.confidence = 0.92;
 
-    custom_mapping::msg::Detection2D p2;
+    custom_mappings::msg::Detection2D p2;
     p2.position.x = 100.0;
     p2.position.y = 400.0 + 20.0 * std::sin(t * 0.7);
     p2.label = "cyclist";
     p2.confidence = 0.78;
 
-    custom_mapping::msg::Detection2D p3;
+    custom_mappings::msg::Detection2D p3;
     p3.position.x = 500.0 + 10.0 * std::cos(t * 1.3);
     p3.position.y = 150.0;
     p3.label = "vehicle";
@@ -162,18 +162,18 @@ private:
     det2d_pub_->publish(det2d);
 
     // BoundingBoxes2D: collection each → Boxes2D with labels
-    auto bbox2d = custom_mapping::msg::BoundingBoxes2D();
+    auto bbox2d = custom_mappings::msg::BoundingBoxes2D();
     bbox2d.header.stamp = stamp;
     bbox2d.header.frame_id = "camera_link";
 
-    custom_mapping::msg::BoundingBox2D b2d1;
+    custom_mappings::msg::BoundingBox2D b2d1;
     b2d1.center_x = 320.0 + 30.0 * std::sin(t);
     b2d1.center_y = 240.0;
     b2d1.half_width = 40.0;
     b2d1.half_height = 80.0;
     b2d1.label = "person";
 
-    custom_mapping::msg::BoundingBox2D b2d2;
+    custom_mappings::msg::BoundingBox2D b2d2;
     b2d2.center_x = 500.0;
     b2d2.center_y = 300.0 + 20.0 * std::cos(t);
     b2d2.half_width = 60.0;
@@ -184,11 +184,11 @@ private:
     bbox2d_pub_->publish(bbox2d);
 
     // BoundingBoxes3D: collection each → Boxes3D with labels
-    auto bbox3d = custom_mapping::msg::BoundingBoxes3D();
+    auto bbox3d = custom_mappings::msg::BoundingBoxes3D();
     bbox3d.header.stamp = stamp;
     bbox3d.header.frame_id = "base_link";
 
-    custom_mapping::msg::BoundingBox3D b3d1;
+    custom_mappings::msg::BoundingBox3D b3d1;
     b3d1.center_x = 5.0 + std::sin(t * 0.5);
     b3d1.center_y = 0.0;
     b3d1.center_z = 0.9;
@@ -197,7 +197,7 @@ private:
     b3d1.half_depth = 2.2;
     b3d1.label = "sedan";
 
-    custom_mapping::msg::BoundingBox3D b3d2;
+    custom_mappings::msg::BoundingBox3D b3d2;
     b3d2.center_x = 8.0;
     b3d2.center_y = 3.0 + std::cos(t * 0.3);
     b3d2.center_z = 1.5;
@@ -210,7 +210,7 @@ private:
     bbox3d_pub_->publish(bbox3d);
 
     // Trajectory: LineStrips3D from waypoints
-    auto traj = custom_mapping::msg::Trajectory();
+    auto traj = custom_mappings::msg::Trajectory();
     traj.header.stamp = stamp;
     traj.header.frame_id = "map";
 
@@ -227,15 +227,15 @@ private:
 
   }
 
-  rclcpp::Publisher<custom_mapping::msg::MotorStatus>::SharedPtr motor_pub_;
-  rclcpp::Publisher<custom_mapping::msg::Detections>::SharedPtr det_pub_;
-  rclcpp::Publisher<custom_mapping::msg::Detections2D>::SharedPtr det2d_pub_;
-  rclcpp::Publisher<custom_mapping::msg::BoundingBoxes2D>::SharedPtr bbox2d_pub_;
-  rclcpp::Publisher<custom_mapping::msg::BoundingBoxes3D>::SharedPtr bbox3d_pub_;
-  rclcpp::Publisher<custom_mapping::msg::Trajectory>::SharedPtr traj_pub_;
-  rclcpp::Publisher<custom_mapping::msg::RigidBodies>::SharedPtr rb_pub_;
-  rclcpp::Publisher<custom_mapping::msg::GpsReading>::SharedPtr gps_pub_;
-  rclcpp::Publisher<custom_mapping::msg::ForceVector>::SharedPtr force_pub_;
+  rclcpp::Publisher<custom_mappings::msg::MotorStatus>::SharedPtr motor_pub_;
+  rclcpp::Publisher<custom_mappings::msg::Detections>::SharedPtr det_pub_;
+  rclcpp::Publisher<custom_mappings::msg::Detections2D>::SharedPtr det2d_pub_;
+  rclcpp::Publisher<custom_mappings::msg::BoundingBoxes2D>::SharedPtr bbox2d_pub_;
+  rclcpp::Publisher<custom_mappings::msg::BoundingBoxes3D>::SharedPtr bbox3d_pub_;
+  rclcpp::Publisher<custom_mappings::msg::Trajectory>::SharedPtr traj_pub_;
+  rclcpp::Publisher<custom_mappings::msg::RigidBodies>::SharedPtr rb_pub_;
+  rclcpp::Publisher<custom_mappings::msg::GpsReading>::SharedPtr gps_pub_;
+  rclcpp::Publisher<custom_mappings::msg::ForceVector>::SharedPtr force_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
   int tick_;
 };
