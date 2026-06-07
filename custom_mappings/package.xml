@@ -5,8 +5,8 @@
   <version>0.1.0</version>
   <description>Custom messages and publisher for testing rewire dynamic mappings</description>
   <maintainer email="alvgaona@gmail.com">Alvaro J. Gaona</maintainer>
-  <url type="website">https://github.com/rewire-run/rewire-custom-mappings-example</url>
-  <url type="repository">https://github.com/rewire-run/rewire-custom-mappings-example</url>
+  <url type="website">https://github.com/rewire-run/custom-mappings-example</url>
+  <url type="repository">https://github.com/rewire-run/custom-mappings-example</url>
   <license>MIT</license>
 
   <buildtool_depend>rosidl_default_generators</buildtool_depend>
